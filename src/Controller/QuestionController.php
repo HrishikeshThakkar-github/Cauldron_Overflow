@@ -39,24 +39,8 @@ class QuestionController extends AbstractController
      */
     public function new(EntityManagerInterface $entityManager)
     {
-        $question = new Question();
-        $question->setName('name  of new question')
-            ->setSlug('name of new question'.rand(1,100))
-            ->setQuestion('qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq
-            qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq')
-            ->setAskedAt(new \DateTime('now'));
-    //dd($question);
-        $entityManager->persist($question);
-        $entityManager->flush();
-        $question->setVotes(rand(0,50));
-        return new Response(
-            sprintf('the shiny question is id #%d,slug #%s',
-            $question->getId(),
-            $question->getSlug(),
-            )
-        );
 
-        //return new Response('time for some doctrine magic');
+        return new Response('time for some doctrine magic');
     }
     /**
      * @Route("/questions/{slug}", name="app_question_show")
