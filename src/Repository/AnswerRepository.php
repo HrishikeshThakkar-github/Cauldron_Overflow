@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Answer;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -47,4 +48,9 @@ class AnswerRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public static function createApprovedCriteria(): Criteria
+    {
+        return Criteria::create()->where(Criteria::expr()->eq('status',Answer::STATUS_APPROVED));
+    }
 }

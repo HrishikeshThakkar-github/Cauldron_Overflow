@@ -35,20 +35,26 @@ class AppFixtures extends Fixture
                 'question'=> $question[array_rand($question)],
             ];
         });
-        $question= QuestionFactory::createOne();
-        $answer1=new Answer();
-        $answer1->setContent('answer1');
-        $answer1->setUsername('hrishi');
 
-        $answer2=new Answer();
-        $answer2->setContent('answer2');
-        $answer2->setUsername('abcdefghijklmnopqstuvwxyz');
-
-        $question->addAnswer($answer1);
-        $question->addAnswer($answer2);
-
-        $manager->persist($answer1);
-        $manager->persist($answer2);
+        AnswerFactory::new( function () use ($question){
+            return [
+                'question'=> $question[array_rand($question)],
+            ];
+        })->need_approval()->many(20)->create();
+//        $question= QuestionFactory::createOne();
+//        $answer1=new Answer();
+//        $answer1->setContent('answer1');
+//        $answer1->setUsername('hrishi');
+//
+//        $answer2=new Answer();
+//        $answer2->setContent('answer2');
+//        $answer2->setUsername('abcdefghijklmnopqstuvwxyz');
+//
+//        $question->addAnswer($answer1);
+//        $question->addAnswer($answer2);
+//
+//        $manager->persist($answer1);
+//        $manager->persist($answer2);
 
         $manager->flush();
     }
