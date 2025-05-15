@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Question;
+use App\Repository\AnswerRepository;
 use App\Service\MarkdownHelper;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
@@ -45,7 +46,7 @@ class QuestionController extends AbstractController
     /**
      * @Route("/questions/{slug}", name="app_question_show")
      */
-    public function show($slug,EntityManagerInterface $entityManager): Response
+    public function show($slug,EntityManagerInterface $entityManager, AnswerRepository $answerRepository): Response
     {
         if ($this->isDebug) {
             $this->logger->info('We are in debug mode!');
@@ -58,15 +59,17 @@ class QuestionController extends AbstractController
             throw $this->createNotFoundException('no question found for slug '.$slug);
         }
         //no need of above code as we have used paramconverter from the SensioFrameworkExtraBundle using just the entity class Question $question
-        $answers = [
-            'Make sure your cat is sitting `purrrfectly` still 🤣',
-            'Honestly, I like furry shoes better than MY cat',
-            'Maybe... try saying the spell backwards?',
-        ];
 
+        //$answers=$answerRepository->findBy(['question'=>$question]);
+
+        //now as we have allowed to add answers property to question class
+        //$answers = $question->getAnswers();
+        //dd($answers);
+
+//
         return $this->render('question/show.html.twig', [
             'question' => $question,
-            'answers' => $answers,
+            //'answers' => $answers,
         ]);
     }
 
