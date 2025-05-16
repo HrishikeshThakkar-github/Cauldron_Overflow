@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Popular Answers {% endblock %}
+
+{% block body %}
+    <div class="container my-md-4">
+        <div class="d-flex justify-content-between">
+            <h1>popular Answers</h1>
+            <form action="{{ path('app_popular_answers') }}" method="get">
+                <input type="search" name="q" class="form-control" aria-label="search " placeholder="Search answers..." value="{{ app.request.query.get('q') }}">
+            </form>
+
+        </div>
+        <ul class="list-unstyled">
+            {% for answer in answers %}
+                {{ include('answer/_answer.html.twig', { showQuestion: true }) }}
+            {% endfor %}
+
+        </ul>
+    </div>
+{% endblock %}

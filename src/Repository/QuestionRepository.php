@@ -27,9 +27,21 @@ class QuestionRepository extends ServiceEntityRepository
     {
         return $this->addIsAskedQueryBuilder()
             ->orderBy('q.askedAt', 'DESC')
+            ->leftJoin('q.tags', 'tag')
+            ->addSelect('tag')
             ->getQuery()
             ->getResult()
             ;
+    }
+    // In QuestionTagRepository
+    public function findRecentTaggedQuestions(): array
+    {
+        return $this->createQueryBuilder('qt')
+            ->innerJoin('qt.question', 'q')
+            ->addSelect('q')
+            ->orderBy('qt.taggedAt', 'DESC')
+            ->getQuery()
+            ->getResult();
     }
 
     private function addIsAskedQueryBuilder(QueryBuilder $qb = null): QueryBuilder
@@ -54,4 +66,5 @@ class QuestionRepository extends ServiceEntityRepository
         ;
     }
     */
+
 }
