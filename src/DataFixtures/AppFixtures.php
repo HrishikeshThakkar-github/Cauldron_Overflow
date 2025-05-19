@@ -9,6 +9,7 @@ use App\Factory\AnswerFactory;
 use App\Factory\QuestionFactory;
 use App\Factory\QuestionTagFactory;
 use App\Factory\TagFactory;
+use App\Factory\UserFactory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
@@ -44,7 +45,8 @@ class AppFixtures extends Fixture
 //                'question' => $questions[array_rand($questions)]
 //            ];
 //        })->needsApproval()->many(20)->create();
-
+        UserFactory::createOne(['email'=>'hrishi@gmail.com']);
+        UserFactory::createMany(100);
         $manager->flush();
 
 
