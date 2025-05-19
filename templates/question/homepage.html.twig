@@ -25,9 +25,7 @@
                                 <span>+ 6 votes</span>
                             </div>
 
-                            {% for tag in question.tags %}
-                                <span class=" rounded-pill bg-light text-dark">{{ tag.name }}</span>
-                            {% endfor %}
+
                         </div>
                         <div class="col">
                             <a class="q-title" href="{{ path('app_question_show', { slug: question.slug }) }}"><h2>

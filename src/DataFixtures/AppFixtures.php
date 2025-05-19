@@ -7,6 +7,7 @@ use App\Entity\Question;
 use App\Entity\Tag;
 use App\Factory\AnswerFactory;
 use App\Factory\QuestionFactory;
+use App\Factory\QuestionTagFactory;
 use App\Factory\TagFactory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -16,30 +17,35 @@ class AppFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        TagFactory::new()->createMany(100);
-        $question=  QuestionFactory::new()->createMany(20, function () {
-           return [
-                'Tags'=>TagFactory::randomRange(0,5),
-            ];
+        TagFactory::createMany(100);
 
+        $questions = QuestionFactory::createMany(20);
+
+        QuestionTagFactory::createMany(100, function() {
+            return [
+                'tag' => TagFactory::random(),
+                'question' => QuestionFactory::random(),
+            ];
         });
 
         QuestionFactory::new()
             ->unpublished()
-            ->createMany(5)
+            ->many(5)
+            ->create()
         ;
 
-        AnswerFactory::new()->createMany(100,function() use ($question){
-           return [
-                'question'=> $question[array_rand($question)],
+        AnswerFactory::createMany(100, function() use ($questions) {
+            return [
+                'question' => $questions[array_rand($questions)]
             ];
         });
+//        AnswerFactory::new(function() use ($questions) {
+//            return [
+//                'question' => $questions[array_rand($questions)]
+//            ];
+//        })->needsApproval()->many(20)->create();
 
-        AnswerFactory::new( function () use ($question){
-            return [
-                'question'=> $question[array_rand($question)],
-            ];
-        })->need_approval()->many(20)->create();
+        $manager->flush();
 
 
 //        $question= QuestionFactory::createOne();
