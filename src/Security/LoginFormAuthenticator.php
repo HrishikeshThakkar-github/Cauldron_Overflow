@@ -4,8 +4,11 @@ namespace App\Security;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -18,50 +21,50 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
 {
     private UserRepository $userRepository;
+    private RouterInterface $router;
 
-    public function __construct(UserRepository $userRepository)
+    public function __construct(UserRepository $userRepository, RouterInterface $router)
     {
         $this->userRepository = $userRepository;
-
+        $this->router = $router;
     }
+
     public function supports(Request $request) :bool
     {
         return $request->isMethod('POST') && $request->getPathInfo() == '/login';
-        //symfony checks and if valid then throws to authenticate
     }
 
     public function getCredentials(Request $request)
     {
-
+        // Not needed in new Symfony versions (Deprecated)
     }
 
     public function getUser($credentials, UserProviderInterface $userProvider)
     {
-        // todo
+        // Not needed in new Symfony versions (Deprecated)
     }
 
     public function checkCredentials($credentials, UserInterface $user)
     {
-        // todo
+        // Not needed in new Symfony versions (Deprecated)
     }
-
-
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response
     {
-        // todo - handle the failure response
-        return new Response("authentication failed");
-    }
 
+        $request->getSession()->set(Security::class,$exception);
+
+        return new RedirectResponse($this->router->generate('app_login'));
+    }
 
     public function supportsRememberMe()
     {
-        // todo
+        // Optional - you can configure remember me logic here
     }
 
     protected function getLoginUrl(Request $request): string
     {
-        // TODO: Implement getLoginUrl() method.
+        return $this->router->generate('app_login');
     }
 
     public function authenticate(Request $request)
@@ -72,17 +75,17 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
         return new Passport(
             new UserBadge($email, function ($userIdentifier) {
                 $user = $this->userRepository->findOneBy(['email' => $userIdentifier]);
-
                 return $user;
             }),
             new CustomCredentials(function ($credentials, User $user) {
-                dd($credentials,$user);
-            },$password)
+                // Validate password (you may replace this with the password hasher)
+                return $credentials === 'Password';
+            }, $password)
         );
     }
 
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
+    public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): Response
     {
-        // TODO: Implement onAuthenticationSuccess() method.
+        return new RedirectResponse($this->router->generate('app_homepage'));
     }
 }

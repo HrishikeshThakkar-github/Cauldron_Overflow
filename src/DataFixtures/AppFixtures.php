@@ -40,30 +40,36 @@ class AppFixtures extends Fixture
                 'question' => $questions[array_rand($questions)]
             ];
         });
-//        AnswerFactory::new(function() use ($questions) {
-//            return [
-//                'question' => $questions[array_rand($questions)]
-//            ];
-//        })->needsApproval()->many(20)->create();
+
+
+    //        AnswerFactory::new(function() use ($questions) {
+    //            return [
+    //                'question' => $questions[array_rand($questions)]
+    //            ];
+    //        })->needsApproval()->many(20)->create();
+
+
+
         UserFactory::createOne(['email'=>'hrishi@gmail.com']);
         UserFactory::createMany(100);
         $manager->flush();
 
 
-//        $question= QuestionFactory::createOne();
-//        $answer1=new Answer();
-//        $answer1->setContent('answer1');
-//        $answer1->setUsername('hrishi');
-//
-//        $answer2=new Answer();
-//        $answer2->setContent('answer2');
-//        $answer2->setUsername('abcdefghijklmnopqstuvwxyz');
-//
-//        $question->addAnswer($answer1);
-//        $question->addAnswer($answer2);
-//
-//        $manager->persist($answer1);
-//        $manager->persist($answer2);
+
+    //        $question= QuestionFactory::createOne();
+    //        $answer1=new Answer();
+    //        $answer1->setContent('answer1');
+    //        $answer1->setUsername('hrishi');
+    //
+    //        $answer2=new Answer();
+    //        $answer2->setContent('answer2');
+    //        $answer2->setUsername('abcdefghijklmnopqstuvwxyz');
+    //
+    //        $question->addAnswer($answer1);
+    //        $question->addAnswer($answer2);
+    //
+    //        $manager->persist($answer1);
+    //        $manager->persist($answer2);
 
     //        $question = QuestionFactory::new()->createOne();
     //        // Create two tags
