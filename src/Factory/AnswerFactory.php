@@ -48,7 +48,7 @@ final class AnswerFactory extends ModelFactory
             // TODO add your default values here (https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#model-factories)
             'content' => self::faker()->text(),
             'username' => self::faker()->userName(),
-            'votes' => self::faker()->randomNumber(),
+            'votes' => rand(-20, 50),
             'created_at' => self::faker()->dateTimeBetween('-1 years'),
             'question' => QuestionFactory::new()->unpublished(),
             'status' => Answer::STATUS_APPROVED,

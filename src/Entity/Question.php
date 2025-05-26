@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Entity;
+
 use App\Repository\AnswerRepository;
 use App\Repository\QuestionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -8,11 +10,13 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+
 /**
  * @ORM\Entity(repositoryClass=QuestionRepository::class)
  */
 class Question
 {
+    use TimestampableEntity;
 
     /**
      * @ORM\Id()
@@ -20,23 +24,28 @@ class Question
      * @ORM\Column(type="integer")
      */
     private $id;
+
     /**
      * @ORM\Column(type="string", length=255)
      */
     private $name;
+
     /**
      * @ORM\Column(type="string", length=100, unique=true)
      * @Gedmo\Slug(fields={"name"})
      */
     private $slug;
+
     /**
      * @ORM\Column(type="text")
      */
     private $question;
+
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $askedAt;
+
     /**
      * @ORM\Column(type="integer")
      */
@@ -48,70 +57,105 @@ class Question
     private $answers;
 
     /**
-     * @ORM\OneToMany(targetEntity=QuestionTag::class, mappedBy="Tag")
+     * @ORM\OneToMany(targetEntity=QuestionTag::class, mappedBy="question")
      */
     private $questionTags;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="questions")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $owner;
 
     public function __construct()
     {
         $this->answers = new ArrayCollection();
+        $this->questionTags = new ArrayCollection();
     }
-    public function getId(): ?int{
+
+    public function getId(): ?int
+    {
         return $this->id;
     }
 
-    public function getName(): ?string{
+    public function getName(): ?string
+    {
         return $this->name;
     }
 
-    public function setName(string $name): self{
+    public function setName(string $name): self
+    {
         $this->name = $name;
+
         return $this;
     }
 
-
-    public function getSlug(): ?string{
+    public function getSlug(): ?string
+    {
         return $this->slug;
     }
 
-    public function setSlug(string $slug): self{
+    public function setSlug(string $slug): self
+    {
         $this->slug = $slug;
+
         return $this;
     }
 
-    public function getQuestion(): ?string{
+    public function getQuestion(): ?string
+    {
         return $this->question;
     }
-    public function setQuestion(string $question): self{
+
+    public function setQuestion(string $question): self
+    {
         $this->question = $question;
 
         return $this;
     }
-    public function getAskedAt(): ?\DateTimeInterface{
+
+    public function getAskedAt(): ?\DateTimeInterface
+    {
         return $this->askedAt;
     }
-    public function setAskedAt(?\DateTimeInterface $askedAt): self{
+
+    public function setAskedAt(?\DateTimeInterface $askedAt): self
+    {
         $this->askedAt = $askedAt;
 
         return $this;
     }
-    public function getVotes(): int{
+
+    public function getVotes(): int
+    {
         return $this->votes;
     }
-    public function getVotesString(): string{
+
+    public function getVotesString(): string
+    {
         $prefix = $this->getVotes() >=0 ? '+' : '-';
+
         return sprintf('%s %d', $prefix, abs($this->getVotes()));
     }
-    public function setVotes(int $votes): self{
+
+    public function setVotes(int $votes): self
+    {
         $this->votes = $votes;
+
         return $this;
     }
-    public function upVote(): self{
+
+    public function upVote(): self
+    {
         $this->votes++;
+
         return $this;
     }
-    public function downVote(): self{
+
+    public function downVote(): self
+    {
         $this->votes--;
+
         return $this;
     }
 
@@ -127,6 +171,7 @@ class Question
     {
         return $this->answers->matching(AnswerRepository::createApprovedCriteria());
     }
+
     public function addAnswer(Answer $answer): self
     {
         if (!$this->answers->contains($answer)) {
@@ -148,6 +193,7 @@ class Question
 
         return $this;
     }
+
     /**
      * @return Collection|QuestionTag[]
      */
@@ -174,6 +220,18 @@ class Question
                 $questionTag->setQuestion(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getOwner(): ?User
+    {
+        return $this->owner;
+    }
+
+    public function setOwner(?User $owner): self
+    {
+        $this->owner = $owner;
 
         return $this;
     }

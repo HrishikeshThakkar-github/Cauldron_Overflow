@@ -3,6 +3,15 @@ security:
 
     hide_user_not_found: false
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
+
+    role_hierarchy:
+        ROLE_ADMIN: [ 'ROLE_COMMENT_ADMIN', 'ROLE_USER_ADMIN', 'ROLE_ALLOWED_TO_SWITCH' ]
+        ROLE_HUMAN_RESOURCES: [ 'ROLE_USER_ADMIN' ]
+
+    password_hashers:
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+    # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
+
     providers:
         # used to reload user from session & other features (e.g. switch_user)
         app_user_provider:
@@ -16,11 +25,24 @@ security:
         main:
             lazy: true
             provider: app_user_provider
+            entry_point: form_login
+            login_throttling: true
+            form_login:
+                login_path: app_login
+                check_path: app_login
+                username_parameter: email
+                password_parameter: password
+                enable_csrf: true
+
             custom_authenticators:
                 - App\Security\LoginFormAuthenticator
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
 
+            remember_me:
+                secret: '%kernel.secret%'
+                signature_properties: [password]
+                always_remember_me: true
             # https://symfony.com/doc/current/security/impersonating_user.html
             # switch_user: true
 
@@ -29,3 +51,4 @@ security:
     access_control:
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/logout, role: PUBLIC_ACCESS }
