@@ -7,6 +7,7 @@ use App\Repository\AnswerRepository;
 use App\Service\MarkdownHelper;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -37,9 +38,11 @@ class QuestionController extends AbstractController
     }
     /**
      * @Route("/questions/new")
+     * @IsGranted("ROLE_USER")
      */
     public function new(EntityManagerInterface $entityManager)
     {
+
 
         return new Response('time for some doctrine magic');
     }
