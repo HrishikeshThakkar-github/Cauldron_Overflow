@@ -10,7 +10,11 @@
         {% endblock %}
     </head>
     <body>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light" style="height: 100px;">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light" style="height: 100px;"
+        {{ is_granted('ROLE_PREVIOUS_ADMIN') ? 'style="background-colour : red !important"' }}
+        >
+        {# what this will do is whenever an admin has changed the role then at that time the navbar's colour gets changed to red which helps to identify that this is not an actual user#}
+
           <a class="navbar-brand" href="{{ path('app_homepage') }}">
             <i style="color: #444; font-size: 2rem;" class="pb-1 fad fa-cauldron"></i>
             <p class="pl-2 d-inline font-weight-bold" style="color: #444;">Cauldron Overflow</p>
